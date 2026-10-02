@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
@@ -48,7 +50,7 @@ class Movie {
             double total = 0.0;
 
             while (current) {
-                cout << " > Review " << count << ": " << fixed << setprecision(1) << current->rating <<
+                cout << " > Review # " << count << ": " << fixed << setprecision(1) << current->rating <<
                 ": " << current->comment << endl;
 
                 total += current->rating;
@@ -87,14 +89,35 @@ class Movie {
                 addReview(current->rating, current->comment);
                 current = current->next;
             }
+        } 
 
-            head = nullptr;
+        // copy assignment operator
+        Movie &operator=(const Movie &other) {
+            if (this != &other) {
+                // delete current reviews
+                Review *current = head;
 
-            
+                while (current) {
+                    Review *next = current->next;
+                    delete current;
+                    current = next;
         }
 
+        head = nullptr;
 
+        title = other.title;
 
+        // copy reviews
+        current = other.head;
+
+        while (current) {
+            addReview(current->rating, current->comment);
+            current = current->next;
+            }
+        }
+
+        return *this;
+    }
 };
 
 int main () {
