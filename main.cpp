@@ -58,8 +58,43 @@ class Movie {
 
             double average = total / (count - 1);
 
-
+            cout << " > Average: " << fixed << setprecision(1) << average << endl;
+            cout << endl;
         }
+
+        // destructor
+        ~Movie() {
+            Review *current = head;
+
+            while (current) {
+                Review *next = current->next;
+                delete current;
+                current = next;
+            }
+
+            head = nullptr;
+        }
+
+        // copy constructor
+        Movie(const Movie &other) {
+            title = other.title;
+            head = nullptr;
+
+            // copy reviews
+            Review *current = other.head;
+
+            while (current) {
+                addReview(current->rating, current->comment);
+                current = current->next;
+            }
+
+            head = nullptr;
+
+            
+        }
+
+
+
 };
 
 int main () {
