@@ -121,6 +121,57 @@ class Movie {
 };
 
 int main () {
-    cout << "Hello, World!" << endl;
+    srand(time(0));
+
+    //open input file
+    ifstream inputFile("input.txt");
+
+    if (!inputFile)
+    {
+        cout << "Error: Could not open input.txt" << endl;
+        return 1;
+    }
+
+    // Read 12 review comments
+    vector<string> comments;
+    string comment;
+
+    while (getline(inputFile, comment))
+    {
+        comments.push_back(comment);
+    }
+
+    inputFile.close();
+
+    // Create movies
+    vector<Movie> movies;
+
+    movies.push_back(Movie("Lord of the Rings"));
+    movies.push_back(Movie("The Godfather"));
+    movies.push_back(Movie("Star Wars"));
+    movies.push_back(Movie("Jurassic Park"));
+
+    // Add 3 reviews to each movie
+    int commentIndex = 0;
+
+    for (int i = 0; i < movies.size(); i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            // Generate random rating from 1.0 to 5.0
+            double rating = 1.0 + (rand() % 41) / 10.0;
+
+            movies[i].addReview(rating, comments[commentIndex]);
+
+            commentIndex++;
+        }
+    }
+
+    // Output all movies
+    for (int i = 0; i < movies.size(); i++)
+    {
+        movies[i].output();
+    }
+
     return 0;
 }
