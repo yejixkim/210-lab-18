@@ -13,15 +13,14 @@ using namespace std;
 // create Movie class
 
 class Movie {
-    private:
-        struct Review {
-            double rating;
-            string comment;
-            Review *next;
-        };
+    private: struct Review {
+        double rating;
+        string comment;
+        Review * next;
+    };
 
-        string title;
-        Review *head;
+    string title;
+    Review * head;
 
     public:
         // constructor
@@ -30,121 +29,119 @@ class Movie {
             head = nullptr;
         }
 
-        // add review to head of the list
-        void addReview(double rating, string comment) {
-            Review *newReview = new Review;
+    // add review to head of the list
+    void addReview(double rating, string comment) {
+        Review * newReview = new Review;
 
-            newReview->rating = rating;
-            newReview->comment = comment;
-            newReview->next = head;
+        newReview -> rating = rating;
+        newReview -> comment = comment;
+        newReview -> next = head;
 
-            head = newReview;
+        head = newReview;
+    }
+
+    // output movie titles, reviews, and avg
+    void output() {
+        cout << "Movie Title: " << title << endl;
+
+        Review * current = head;
+        int count = 1;
+        double total = 0.0;
+
+        while (current) {
+            cout << " > Review # " << count << ": " << fixed << setprecision(1) << current -> rating <<
+                ": " << current -> comment << endl;
+
+            total += current -> rating;
+            count++;
+            current = current -> next;
         }
 
-        // output movie titles, reviews, and avg
-        void output() {
-            cout << "Movie Title: " << title << endl;
+        double average = total / (count - 1);
 
-            Review *current = head;
-            int count = 1;
-            double total = 0.0;
+        cout << " > Average: " << fixed << setprecision(1) << average << endl;
+        cout << endl;
+    }
 
-            while (current) {
-                cout << " > Review # " << count << ": " << fixed << setprecision(1) << current->rating <<
-                ": " << current->comment << endl;
+    // destructor
+    ~Movie() {
+        Review * current = head;
 
-                total += current->rating;
-                count++;
-                current = current->next;
-            }
-
-            double average = total / (count - 1);
-
-            cout << " > Average: " << fixed << setprecision(1) << average << endl;
-            cout << endl;
+        while (current) {
+            Review * next = current -> next;
+            delete current;
+            current = next;
         }
 
-        // destructor
-        ~Movie() {
-            Review *current = head;
+        head = nullptr;
+    }
+
+    // copy constructor
+    Movie(const Movie & other) {
+        title = other.title;
+        head = nullptr;
+
+        // copy reviews
+        Review * current = other.head;
+
+        while (current) {
+            addReview(current -> rating, current -> comment);
+            current = current -> next;
+        }
+    }
+
+    // copy assignment operator
+    Movie & operator = (const Movie & other) {
+        if (this != & other) {
+            // delete current reviews
+            Review * current = head;
 
             while (current) {
-                Review *next = current->next;
+                Review * next = current -> next;
                 delete current;
                 current = next;
             }
 
             head = nullptr;
-        }
 
-        // copy constructor
-        Movie(const Movie &other) {
             title = other.title;
-            head = nullptr;
 
             // copy reviews
-            Review *current = other.head;
+            current = other.head;
 
             while (current) {
-                addReview(current->rating, current->comment);
-                current = current->next;
-            }
-        } 
-
-        // copy assignment operator
-        Movie &operator=(const Movie &other) {
-            if (this != &other) {
-                // delete current reviews
-                Review *current = head;
-
-                while (current) {
-                    Review *next = current->next;
-                    delete current;
-                    current = next;
-        }
-
-        head = nullptr;
-
-        title = other.title;
-
-        // copy reviews
-        current = other.head;
-
-        while (current) {
-            addReview(current->rating, current->comment);
-            current = current->next;
+                addReview(current -> rating, current -> comment);
+                current = current -> next;
             }
         }
 
-        return *this;
+        return * this;
     }
 };
 
-int main () {
+int main() {
     srand(time(0));
 
     //open input file
     ifstream inputFile("input.txt");
 
-    if (!inputFile)
-    {
+    if (!inputFile) {
         cout << "Error: Could not open input.txt" << endl;
         return 1;
     }
 
     // Read 12 review comments
-    vector<string> comments;
+    vector < string > comments;
     string comment;
 
-    while (getline(inputFile, comment))
-    {
+    while (getline(inputFile, comment)) {
         comments.push_back(comment);
     }
 
     inputFile.close();
 
     // Create movies
-    vector<Movie> movies;
+    vector < Movie > movies;
 
     movies.push_back(Movie("Lord of the Rings"));
     movies.push_back(Movie("The Godfather"));
@@ -154,10 +151,8 @@ int main () {
     // Add 3 reviews to each movie
     int commentIndex = 0;
 
-    for (int i = 0; i < movies.size(); i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
+    for (int i = 0; i < movies.size(); i++) {
+        for (int j = 0; j < 3; j++) {
             // Generate random rating from 1.0 to 5.0
             double rating = 1.0 + (rand() % 41) / 10.0;
 
@@ -168,8 +163,7 @@ int main () {
     }
 
     // Output all movies
-    for (int i = 0; i < movies.size(); i++)
-    {
+    for (int i = 0; i < movies.size(); i++) {
         movies[i].output();
     }
 
